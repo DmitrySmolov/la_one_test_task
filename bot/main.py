@@ -3,7 +3,7 @@ import logging
 
 from aiogram import Bot, Dispatcher
 
-from bot.handlers.product_info import router
+from bot.handlers.product_info import router as product_info_router
 from config import BotCmdsEnum, config
 
 logging.basicConfig(level=logging.INFO)
@@ -12,7 +12,7 @@ bot = Bot(token=config.bot_token.get_secret_value())
 
 dp = Dispatcher()
 
-dp.include_router(router)
+dp.include_router(product_info_router)
 
 
 async def main():

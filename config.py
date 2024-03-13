@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     """
     bot_token: SecretStr
     database_url: SecretStr
+    wb_api_url: SecretStr
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE, env_file_encoding=ENCODING, extra='ignore'
