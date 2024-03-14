@@ -5,10 +5,10 @@ from config import config
 
 engine = create_async_engine(
     url=config.database_url.get_secret_value(),
-    echo=True, future=True
+    echo=False, future=True
 )
 
-async_session = sessionmaker(
+AsyncSessionLocal = sessionmaker(
     bind=engine,
     class_=AsyncSession,
     expire_on_commit=False

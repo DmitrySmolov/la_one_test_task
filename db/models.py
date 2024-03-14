@@ -43,7 +43,7 @@ class WBProductCard(Base):
 
     def __repr__(self) -> str:
         return (
-            f'WBProductCard(wb_product_id={self.product_id}, '
+            f'WBProductCard(wb_product_id={self.wb_product_id}, '
             f'created_at={self.created_at})'
         )
 

@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     bot_token: SecretStr
     database_url: SecretStr
     wb_api_url: SecretStr
+    scheduler_interval: int = 5
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE, env_file_encoding=ENCODING, extra='ignore'
