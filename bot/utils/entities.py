@@ -2,6 +2,8 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
+from config import config
+
 
 class PydanticProductCard(BaseModel):
     """Модель для карточки товара."""
@@ -35,7 +37,9 @@ class PydanticProductCard(BaseModel):
             'Количество товара': self.stock if self.stock else 'нет данных'
         }
         if with_dt:
-            result['Дата записи'] = self.created_at
+            result['Дата записи'] = self.created_at.strftime(
+                config.user_dt_format
+            )
         return result
 
     def for_db_product_model_dump(self) -> dict[str]:

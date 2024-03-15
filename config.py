@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     database_url: SecretStr
     wb_api_url: SecretStr
     scheduler_interval: int = 5
+    timezone: str = 'Europe/Moscow'
+    buttons_in_row: int = 4
+    product_cards_limit: int = 5
+    user_dt_format: str = '%d.%m.%Y %H:%M:%S'
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE, env_file_encoding=ENCODING, extra='ignore'
