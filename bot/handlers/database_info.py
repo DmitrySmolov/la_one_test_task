@@ -8,7 +8,7 @@ from bot.utils.text import generate_product_info_from_card
 from config import BotCmdsEnum
 from db.session import get_session
 
-NO_CARDS_TXT = 'Для вас пока не созранено ни одной карточки товара.'
+NO_CARDS_TXT = 'Для вас пока не сохранено ни одной карточки товара.'
 YOUR_CARDS_TXT = 'Вот ваши последние {num_cards} карточки товаров:\n'
 
 router = Router()
