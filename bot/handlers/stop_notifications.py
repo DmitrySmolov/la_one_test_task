@@ -35,16 +35,19 @@ class StopNotificationsStates(StatesGroup):
 
 
 @router.message(
-    StateFilter(None),
+    StateFilter('*'),
     Command(BotCmdsEnum.STOP_NOTIFICATIONS.command)
 )
 async def start_conversation(message: Message, state: FSMContext):
+    await state.clear()
     async with get_session() as session:
         product_ids = await get_product_ids_subscribed_by_user(
             session=session, tg_user_id=message.from_user.id
         )
     if not product_ids:
-        await message.answer(NO_PROD_SUBSCRIBED_TXT)
+        await message.answer(
+            text=NO_PROD_SUBSCRIBED_TXT, reply_markup=ReplyKeyboardRemove()
+        )
         return await state.clear()
     await state.update_data(product_ids=product_ids)
     keyboard = _get_keyboard_for_product_ids(product_ids)

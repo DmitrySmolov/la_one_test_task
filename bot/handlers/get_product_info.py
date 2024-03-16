@@ -3,7 +3,7 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, ReplyKeyboardRemove
 from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardButton
 
 from bot.utils.api import get_product_card_from_api
@@ -15,7 +15,7 @@ from config import BotCmdsEnum, config
 from db.session import get_session
 
 PROMPT_ENTER_PRODUCT_ID_TXT = (
-    'Введите артикул товара с Wildberries для получения информации о нем.'
+    'Введите артикул товара с Wildberries для получения информации о нем '
     f'каждые {config.scheduler_interval} минут.'
 )
 DIGITS_ONLY_TXT = 'Артикул должен содержать только цифры.'
@@ -36,6 +36,10 @@ SUBSCRIBED_ALREADY_TXT = (
 )
 SUBSCRIPTION_SUCCESS_TXT = (
     'Вы подписаны на информацию по товару с артикулом {wb_product_id}.'
+    '\n\n Если захотите подписаться на что-то ещё, снова вызовите команду '
+    f'/{BotCmdsEnum.GET_PRODUCT_INFO.command} в меню бота. \n\n'
+    'Для отписки от уведомлений используйте команду '
+    f'/{BotCmdsEnum.STOP_NOTIFICATIONS.command} в меню бота.'
 )
 
 router = Router()
@@ -46,17 +50,21 @@ class GetProductInfoStates(StatesGroup):
 
 
 @router.message(
-    StateFilter(None),
+    StateFilter('*'),
     Command(BotCmdsEnum.GET_PRODUCT_INFO.command)
 )
 async def start_conversation(message: Message, state: FSMContext):
-    await message.answer(PROMPT_ENTER_PRODUCT_ID_TXT)
+    await state.clear()
+    await message.answer(
+        text=PROMPT_ENTER_PRODUCT_ID_TXT,
+        reply_markup=ReplyKeyboardRemove()
+    )
     await state.set_state(GetProductInfoStates.waiting_for_product_id)
 
 
 @router.message(
     GetProductInfoStates.waiting_for_product_id,
-    F.text
+    F.text & ~F.text.startswith('/')
 )
 async def product_id_recieved(message: Message, state: FSMContext):
     await _delete_last_answer_inline_keyboard(message, state)
